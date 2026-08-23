@@ -32,10 +32,16 @@ To push future changes: `git push`.
 
 **https://edupro-noise-floor.streamlit.app**
 
-Deployed on Streamlit Community Cloud from `main` / `app.py`, Python 3.13, no secrets
-required. Verified live: all seven modules load, the joblib models unpickle correctly
-on the cloud runtime, and the Course Demand Predictor returns the same numbers as
-local (166 enrollments, 80% interval 153–181, revenue 24,849).
+Deployed on Streamlit Community Cloud from `main` / `app.py`, **Python 3.14**, no
+secrets required, sharing set to "public and searchable" (verified with an anonymous
+request: HTTP 200). All seven modules load, the joblib models unpickle correctly on
+the cloud runtime, and the Course Demand Predictor returns the same numbers as local
+(166 enrollments, 80% interval 153–181, revenue 24,849).
+
+The runtime is 3.14 while the results in `reports/` were produced on local Python
+3.13. That is safe here — every pinned package was checked against PyPI and ships a
+cp314 wheel or is pure Python — but if you ever need byte-identical reproduction of
+the paper's numbers, run the pipeline locally on 3.13.
 
 The app auto-redeploys on every push to `main`.
 
