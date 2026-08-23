@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Scratch
+*.log
+
+# The canonical copy of the source workbook lives in data/raw/;
+# this ignores the duplicate the user keeps at the project root.
+/EduPro Online Platform.xlsx

@@ -1,0 +1,197 @@
+
+==============================================================================
+STAGE 1  Data preparation
+==============================================================================
+                           Check   Value
+                      Users rows  3000.0
+                   Teachers rows    60.0
+                    Courses rows    60.0
+               Transactions rows 10000.0
+              Duplicate CourseID     0.0
+             Duplicate TeacherID     0.0
+         Duplicate TransactionID     0.0
+     Txn CourseID not in Courses     0.0
+   Txn TeacherID not in Teachers     0.0
+         Txn UserID not in Users     0.0
+  Courses with zero transactions     0.0
+Total missing cells (all sheets)     0.0
+                Negative amounts     0.0
+  Duplicate (User, Course) pairs     0.0
+      Max |Amount - CoursePrice|     0.0
+
+==============================================================================
+STAGE 2  Feature engineering
+==============================================================================
+course-level table : 60 rows x 33 cols
+panel table        : 540 rows x 28 cols (9 usable months after lag warm-up)
+
+==============================================================================
+STAGE 3  Predictability diagnostics
+==============================================================================
+Uniform-allocation chi2 = 55.52 (dof 59), p = 0.6046
+Index of dispersion     = 0.941  (1.00 = pure Poisson noise)
+Noise-floor max R2      = 0.0000
+Course x month independence p = 0.8420
+Price elasticity        = -0.0096  95% CI [-0.0346, +0.0155]
+Revenue identity holds  = True
+
+==============================================================================
+STAGE 4a  Cold-start model - Enrollment Count
+==============================================================================
+    [EnrollmentCount] Baseline (mean): done
+    [EnrollmentCount] Linear Regression: done
+    [EnrollmentCount] Ridge Regression: done
+    [EnrollmentCount] Lasso Regression: done
+    [EnrollmentCount] Random Forest: done
+    [EnrollmentCount] Gradient Boosting: done
+            Model   CV_MAE  CV_MAE_sd  CV_RMSE  CV_RMSE_sd    CV_R2  CV_R2_sd  LOO_MAE  LOO_RMSE   LOO_R2  Skill_vs_baseline
+  Baseline (mean)   10.168      0.096   12.597       0.056   -0.029     0.009   10.192    12.629   -0.034              0.000
+Linear Regression   11.836      0.848   15.005       1.068   -0.466     0.213   11.125    13.709   -0.219             -0.191
+ Ridge Regression   10.113      0.310   12.269       0.401    0.023     0.064    9.759    11.880    0.085              0.026
+ Lasso Regression   10.273      0.355   12.450       0.191   -0.005     0.031    9.704    12.166    0.040              0.012
+    Random Forest    9.717      0.210   12.098       0.226    0.051     0.035    9.628    11.833    0.092              0.040
+Gradient Boosting   11.325      0.326   13.731       0.372   -0.223     0.067   10.355    12.616   -0.032             -0.090
+
+==============================================================================
+STAGE 4b  Cold-start model - Course Revenue (with price)
+==============================================================================
+    [CourseRevenue] Baseline (mean): done
+    [CourseRevenue] Linear Regression: done
+    [CourseRevenue] Ridge Regression: done
+    [CourseRevenue] Lasso Regression: done
+    [CourseRevenue] Random Forest: done
+    [CourseRevenue] Gradient Boosting: done
+            Model     CV_MAE  CV_MAE_sd    CV_RMSE  CV_RMSE_sd      CV_R2   CV_R2_sd    LOO_MAE   LOO_RMSE     LOO_R2  Skill_vs_baseline
+  Baseline (mean)  20762.225    206.775  25620.633     272.578     -0.034      0.022  20762.269  25624.154     -0.034              0.000
+Linear Regression   2338.431    159.256   3013.931     247.073      0.986      0.002   2021.411   2490.671      0.990              0.882
+ Ridge Regression   2175.529    147.040   2957.270     213.765      0.986      0.002   2011.673   2563.995      0.990              0.885
+ Lasso Regression   1466.213     49.438   2406.130      97.778      0.991      0.001   1330.987   2322.688      0.992              0.906
+    Random Forest   4951.838    135.232   8401.267     356.752      0.889      0.010   4787.280   8143.831      0.896              0.672
+Gradient Boosting   2007.453    155.024   4081.349     286.200      0.974      0.004   1887.132   3875.580      0.976              0.841
+
+==============================================================================
+STAGE 4c  ABLATION - Course Revenue without any price feature
+==============================================================================
+    [CourseRevenue (no price)] Baseline (mean): done
+    [CourseRevenue (no price)] Linear Regression: done
+    [CourseRevenue (no price)] Ridge Regression: done
+    [CourseRevenue (no price)] Lasso Regression: done
+    [CourseRevenue (no price)] Random Forest: done
+    [CourseRevenue (no price)] Gradient Boosting: done
+            Model     CV_MAE  CV_MAE_sd    CV_RMSE  CV_RMSE_sd      CV_R2   CV_R2_sd    LOO_MAE   LOO_RMSE     LOO_R2  Skill_vs_baseline
+  Baseline (mean)  20762.225    206.775  25620.633     272.578     -0.034      0.022  20762.269  25624.154     -0.034              0.000
+Linear Regression  26273.322   1795.479  35178.680    2420.890     -0.957      0.268  23521.131  31984.724     -0.611             -0.373
+ Ridge Regression  20868.239   1022.572  26446.063    1332.603     -0.104      0.114  20778.585  26034.526     -0.068             -0.032
+ Lasso Regression  23772.105   1411.668  32509.534    2138.568     -0.670      0.221  21643.921  29880.275     -0.406             -0.269
+    Random Forest  20783.454    395.607  26919.214     510.072     -0.142      0.043  20979.330  27125.049     -0.159             -0.051
+Gradient Boosting  23058.676    866.318  32258.128     719.549     -0.640      0.073  24260.161  33035.956     -0.719             -0.259
+
+==============================================================================
+STAGE 5  Operational panel forecast (out-of-time split)
+==============================================================================
+--- monthly enrollments ---
+                         Model      MAE     RMSE       R2  Skill_vs_baseline
+        Baseline (global mean)    2.833    3.704   -0.022              0.000
+Baseline (course history mean)    2.786    3.689   -0.014              0.004
+            Naive (last month)    3.989    5.082   -0.925             -0.372
+             Linear Regression    3.119    3.985   -0.184             -0.076
+              Ridge Regression    2.863    3.721   -0.032             -0.005
+              Lasso Regression    2.833    3.704   -0.022              0.000
+                 Random Forest    2.884    3.756   -0.052             -0.014
+             Gradient Boosting    3.156    4.031   -0.211             -0.088
+
+--- monthly revenue ---
+                         Model        MAE       RMSE         R2  Skill_vs_baseline
+        Baseline (global mean)   1703.912   2192.611     -0.000              0.000
+Baseline (course history mean)    298.524    701.159      0.898              0.680
+            Naive (last month)    395.109    991.330      0.796              0.548
+             Linear Regression    315.216    626.200      0.918              0.714
+              Ridge Regression    307.134    626.429      0.918              0.714
+              Lasso Regression    264.555    607.353      0.923              0.723
+                 Random Forest    260.137    656.851      0.910              0.700
+             Gradient Boosting    293.032    663.441      0.908              0.697
+
+==============================================================================
+STAGE 6  Feature importance
+==============================================================================
+--- permutation importance, EnrollmentCount (top 10) ---
+            Feature  Importance  Importance_sd
+      QualitySignal      7.4199        13.3823
+InstructorAvgRating      2.8449         6.8454
+       PricePerHour      2.3896         5.5693
+        CoursePrice      2.0213         3.8329
+       PriceBandOrd      1.8917         3.6382
+       CourseRating      1.3881        12.4209
+      RatingTierOrd      1.1741         6.9068
+         CourseType      0.4185         2.0050
+     CourseCategory      0.0078         6.4208
+ExperienceBucketOrd     -0.3803         1.0760
+
+--- permutation importance, CourseRevenue (top 10) ---
+                Feature   Importance  Importance_sd
+            CoursePrice  156279527.3    105294911.7
+           PriceBandOrd   93874336.3     63044635.7
+           PricePerHour   87620547.8     60588583.1
+             CourseType   41339216.6     28320548.8
+           CourseRating    2267760.0      3182476.8
+          QualitySignal    1779912.4      2669808.9
+          RatingTierOrd    1201517.3      1274882.6
+            CourseLevel     394689.2       499996.1
+      DurationBucketOrd    -374306.9      2377025.4
+InstructorAvgExperience    -397203.0      3935532.5
+
+--- standardised Ridge coefficients, EnrollmentCount (top 10) ---
+                    Feature  Coefficient  AbsCoefficient
+              QualitySignal        1.347           1.347
+               PriceBandOrd       -1.179           1.179
+CourseCategory_Data Science        1.074           1.074
+    InstructorAvgExperience        1.038           1.038
+               CourseRating        0.879           0.879
+        InstructorAvgRating        0.833           0.833
+   CourseLevel_Intermediate       -0.830           0.830
+              RatingTierOrd        0.829           0.829
+                CoursePrice       -0.763           0.763
+             CourseDuration       -0.668           0.668
+
+==============================================================================
+STAGE 7  Category-level revenue aggregation
+==============================================================================
+         CourseCategory  ActualRevenue  PredictedRevenue  Enrollments  Courses     AbsError      APE_pct
+Artificial Intelligence       202750.7          208733.7          829        5       5983.0          3.0
+               Business       181527.6          179470.0          833        5       2057.6          1.1
+     Project Management       169103.2          163770.2          829        5       5333.0          3.2
+            Programming        77453.9           84569.3          806        5       7115.3          9.2
+           Data Science        77052.3           80269.2          916        5       3216.9          4.2
+          Cybersecurity        59139.0           63910.5          819        5       4771.5          8.1
+      Digital Marketing        56261.3           57838.2          808        5       1576.9          2.8
+                 Design        43113.7           46864.0          827        5       3750.3          8.7
+                Finance        28106.2           25056.1          864        5       3050.1         10.9
+        Web Development        16682.2           15563.9          844        5       1118.3          6.7
+       Machine Learning          133.4            1718.4          819        5       1585.1       1188.4
+              Marketing            0.0           -1108.8          806        5       1108.8          NaN
+
+MAPE, all revenue-earning categories : 113.3%  (inflated by near-zero-revenue categories)
+MAPE, categories above 1,000 revenue : 5.8%  | median APE: 5.4%  (n=10)
+Portfolio total  actual = 911,323 | predicted = 926,655 | error = +1.68%
+NOTE: unconstrained linear model predicts negative revenue for ['Marketing'] - a floor at zero is required before operational use.
+
+==============================================================================
+STAGE 8  Persisting deployable models
+==============================================================================
+selected for EnrollmentCount : Random Forest
+selected for CourseRevenue   : Lasso Regression
+saved: enrollment_model.joblib panel_enrollment_model.joblib revenue_model.joblib
+
+==============================================================================
+HEADLINE RESULTS
+==============================================================================
+  courses                          60
+  enrollments                      10000
+  total_revenue                    911323.4699999999
+  free_courses                     38
+  free_enrollment_share            0.6403
+  best_enrollment_cv_r2            0.050779217559738576
+  best_revenue_cv_r2               0.9908691584551356
+  best_revenue_noprice_cv_r2       -0.10383143345515533
+  best_panel_enrollment_r2         -0.02231946703351051
+  runtime_seconds                  165.2

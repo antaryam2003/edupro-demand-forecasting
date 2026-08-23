@@ -1,0 +1,68 @@
+{
+  "diagnostics": {
+    "uniform_allocation_test": {
+      "n_enrollments": 10000,
+      "n_courses": 60,
+      "expected_per_course": 166.66666666666666,
+      "observed_sd": 12.523424379621192,
+      "multinomial_sd": 12.801909579781013,
+      "chi2": 55.52000000000001,
+      "dof": 59,
+      "p_value": 0.6045559445626619,
+      "index_of_dispersion": 0.9410169491525425
+    },
+    "noise_floor": {
+      "total_variance": 156.8361581920904,
+      "sampling_variance": 163.88888888888886,
+      "systematic_variance": 0.0,
+      "max_attainable_r2": 0.0
+    },
+    "panel_independence": {
+      "chi2": 612.9019453069651,
+      "dof": 649,
+      "p_value": 0.8419637924915199,
+      "interpretation": "no course-specific seasonality"
+    },
+    "monthly_trend": {
+      "monthly_mean": 833.3333333333334,
+      "monthly_sd": 39.98711913816369,
+      "poisson_sd": 28.867513459481287,
+      "trend_slope_per_month": 0.9650349650349651,
+      "trend_p_value": 0.788008444087596,
+      "dispersion_chi2": 21.106399999999997,
+      "dispersion_dof": 11,
+      "dispersion_p_value": 0.03228532442230382
+    },
+    "price_elasticity": {
+      "n_paid_courses": 22,
+      "elasticity": -0.009554221825173995,
+      "ci_low": -0.034605920475806524,
+      "ci_high": 0.015497476825458536,
+      "p_value": 0.4356372405397289,
+      "r_squared": 0.03067394000248364,
+      "price_min": 0.78,
+      "price_max": 490.9
+    },
+    "revenue_identity": {
+      "max_abs_error": 3.637978807091713e-12,
+      "mean_abs_error": 2.1221543041368326e-13,
+      "identity_holds": true
+    }
+  },
+  "deployed_models": {
+    "EnrollmentCount": "Random Forest",
+    "CourseRevenue": "Lasso Regression"
+  },
+  "headline": {
+    "courses": 60,
+    "enrollments": 10000,
+    "total_revenue": 911323.4699999999,
+    "free_courses": 38,
+    "free_enrollment_share": 0.6403,
+    "best_enrollment_cv_r2": 0.050779217559738576,
+    "best_revenue_cv_r2": 0.9908691584551356,
+    "best_revenue_noprice_cv_r2": -0.10383143345515533,
+    "best_panel_enrollment_r2": -0.02231946703351051,
+    "runtime_seconds": 165.2
+  }
+}

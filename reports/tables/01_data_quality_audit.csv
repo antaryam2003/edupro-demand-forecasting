@@ -1,0 +1,16 @@
+Check,Value
+Users rows,3000.0
+Teachers rows,60.0
+Courses rows,60.0
+Transactions rows,10000.0
+Duplicate CourseID,0.0
+Duplicate TeacherID,0.0
+Duplicate TransactionID,0.0
+Txn CourseID not in Courses,0.0
+Txn TeacherID not in Teachers,0.0
+Txn UserID not in Users,0.0
+Courses with zero transactions,0.0
+Total missing cells (all sheets),0.0
+Negative amounts,0.0
+"Duplicate (User, Course) pairs",0.0
+Max |Amount - CoursePrice|,0.0
