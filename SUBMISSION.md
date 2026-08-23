@@ -1,62 +1,69 @@
 # Submission Guide
 
-The form asks for four links. Three are ready to publish from this repository; the
-fourth is a video you record. Work through them in order.
+The form asks for four links. **Three are done and verified live.** The fourth is a
+video only you can record — see section 4.
+
+| # | Field | Status | Link |
+|---|---|---|---|
+| 1 | GitHub Repository | **done** | https://github.com/antaryam2003/edupro-demand-forecasting |
+| 2 | Deployed project | **done** | https://edupro-noise-floor.streamlit.app |
+| 3 | Research paper | **done** | https://claude.ai/code/artifact/84562d71-971e-4a9c-8322-494a259ef695 |
+| 4 | Feedback video | **you record** | — |
+
+> **Before submitting link 3:** artifacts are private by default. Open it, click
+> **Share**, and enable link access, or a reviewer will get a 404. Links 1 and 2 are
+> already public.
 
 ---
 
-## 1. GitHub Repository Link
+## 1. GitHub Repository Link — done
 
-The repository is already committed locally. Push it:
+**https://github.com/antaryam2003/edupro-demand-forecasting**
 
-```bash
-# create an empty repo on github.com first (no README, no .gitignore)
-git remote add origin https://github.com/<your-username>/edupro-demand-forecasting.git
-git branch -M main
-git push -u origin main
-```
+Public, branch `main`, 46 files. Verified on the remote: `app.py`, `requirements.txt`,
+and all of `data/processed/`, `models/` and `reports/tables/` are present — the
+deployed app reads those and will not start without them.
 
-**Check before submitting:** `data/processed/`, `models/` and `reports/tables/` must be
-in the repo — the deployed app reads them and will not start without them. They are
-small (well under 5 MB total) and are deliberately *not* gitignored.
-
-Submit: `https://github.com/<your-username>/edupro-demand-forecasting`
+To push future changes: `git push`.
 
 ---
 
-## 2. Deployed Project Link (Streamlit)
+## 2. Deployed Project Link — done
 
-Deploy on Streamlit Community Cloud — free, and it reads straight from GitHub.
+**https://edupro-noise-floor.streamlit.app**
 
-1. Go to **share.streamlit.io** and sign in with GitHub.
-2. **New app** → pick the repository → branch `main` → main file path `app.py`.
-3. **Deploy.** First build takes 2–4 minutes while `requirements.txt` installs.
+Deployed on Streamlit Community Cloud from `main` / `app.py`, Python 3.13, no secrets
+required. Verified live: all seven modules load, the joblib models unpickle correctly
+on the cloud runtime, and the Course Demand Predictor returns the same numbers as
+local (166 enrollments, 80% interval 153–181, revenue 24,849).
 
-The app needs no secrets, no database and no environment variables.
+The app auto-redeploys on every push to `main`.
 
-**If the build fails**, it is almost always one of two things: a missing
-`data/processed/` folder (see the check above), or a package version unavailable on
-the Cloud's Python runtime. For the latter, loosen the pins in `requirements.txt`
-(replace `==` with `>=`) and redeploy.
-
-Submit: `https://<your-app-name>.streamlit.app`
-
----
-
-## 3. Research Paper Link
-
-Two options:
-
-- **Hosted HTML page** — already published as an Artifact; use that URL directly.
-- **GitHub file** — `https://github.com/<your-username>/edupro-demand-forecasting/blob/main/reports/research_paper.md`
-
-Either is a valid answer to "Research paper link". The hosted page is easier for a
-reviewer to read.
+**If a future build fails**, it is almost always a package version without a wheel for
+the selected Python runtime. Every current pin was checked against PyPI and has a
+cp313/cp314 wheel or is pure Python. If you bump a version, re-check, or loosen that
+pin to `>=` — but keep `scikit-learn==1.9.0` exact, because the saved models in
+`models/` were pickled with it.
 
 ---
 
-## 4. Project Feedback Video Link
+## 3. Research Paper Link — done
 
+**https://claude.ai/code/artifact/84562d71-971e-4a9c-8322-494a259ef695**
+
+Full paper with all seven figures embedded. **It is private until you share it** —
+open it, click **Share**, enable link access, then confirm in a private window that a
+logged-out visitor can read it.
+
+Alternative if you would rather not deal with sharing settings:
+`https://github.com/antaryam2003/edupro-demand-forecasting/blob/main/reports/research_paper.md`
+(public already, renders as Markdown on GitHub).
+
+---
+
+## 4. Project Feedback Video Link — you record this
+
+This one has to be you: it is your experience and your learnings, in your voice.
 Record 5–8 minutes, screen + voice. Loom, Google Drive (set to "anyone with the link"),
 or an unlisted YouTube upload all work. **Check the sharing permission before
 submitting** — a private link is the most common reason a submission gets returned.
@@ -194,9 +201,9 @@ submitting** — a private link is the most common reason a submission gets retu
 
 ## Final checklist
 
-- [ ] GitHub repo pushed, `data/processed/` + `models/` + `reports/tables/` present
-- [ ] Streamlit app deployed and loads without error
-- [ ] Every dashboard module clicks through cleanly on the deployed URL
-- [ ] Research paper link opens for a logged-out visitor
-- [ ] Video sharing permission set to "anyone with the link"
-- [ ] All four URLs start with `https://`
+- [x] GitHub repo pushed, `data/processed/` + `models/` + `reports/tables/` present
+- [x] Streamlit app deployed and loads without error
+- [x] Every dashboard module clicks through cleanly on the deployed URL
+- [ ] **Research paper set to link-accessible** (Share button) and checked logged-out
+- [ ] Video recorded and sharing set to "anyone with the link"
+- [ ] All four URLs pasted into the form, each starting with `https://`
