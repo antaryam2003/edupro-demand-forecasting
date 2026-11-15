@@ -55,7 +55,7 @@ pin to `>=` — but keep `scikit-learn==1.9.0` exact, because the saved models i
 
 ## 3. Research Paper Link — done
 
-**https://claude.ai/code/artifact/84562d71-971e-4a9c-8322-494a259ef695**
+**https://eduproreseachpaper.tiiny.site/**
 
 Full paper with all seven figures embedded. **It is private until you share it** —
 open it, click **Share**, enable link access, then confirm in a private window that a
