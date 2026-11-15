@@ -7,7 +7,7 @@ video only you can record — see section 4.
 |---|---|---|---|
 | 1 | GitHub Repository | **done** | https://github.com/antaryam2003/edupro-demand-forecasting |
 | 2 | Deployed project | **done** | https://edupro-noise-floor.streamlit.app |
-| 3 | Research paper | **done** | https://claude.ai/code/artifact/84562d71-971e-4a9c-8322-494a259ef695 |
+| 3 | Research paper | **done** | https://eduproreseachpaper.tiiny.site/ |
 | 4 | Feedback video | **you record** | — |
 
 > **Before submitting link 3:** artifacts are private by default. Open it, click
